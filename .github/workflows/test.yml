@@ -4,5 +4,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Say Hello
-      run: echo "Hello World"
+      - name: Run Hello World in Docker container
+        uses: docker://hello-world
+        with:
+          entrypoint: sh
+          args: -c "echo Hello World"
