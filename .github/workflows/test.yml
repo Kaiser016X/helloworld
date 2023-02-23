@@ -1,8 +1,60 @@
-name: HelloWorldPipeline
-on: [push]
+name: 'Issue created'
+
+on:
+  issues:
+    types: [opened]
+
 jobs:
-  build:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Hello World in Docker container
-        uses: docker://hello-world
+      - name: 'Issue created'
+        run: echo 'Issue created'
+
+name: 'PR merged'
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: 'PR merged'
+        run: echo 'PR merged'
+        
+name: 'Next one'
+
+on:
+  workflow_run:
+    workflows: ['PR merged']
+    types: [completed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Next one'
+        run: echo 'Next one'
+        
+name: 'Workflow depends'
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Job 1'
+        run: echo 'Job 1'
+
+  job2:
+    needs: [job1]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Job 2'
+        run: echo 'Job 2'
+
