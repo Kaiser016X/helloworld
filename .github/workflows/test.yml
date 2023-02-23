@@ -6,6 +6,3 @@ jobs:
     steps:
       - name: Run Hello World in Docker container
         uses: docker://hello-world
-        with:
-          entrypoint: sh
-          args: -c "echo Hello World"
