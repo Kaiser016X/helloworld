@@ -1,60 +1,45 @@
-name: 'Issue created'
+name: 'Exercices'
 
 on:
   issues:
     types: [opened]
-
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Issue created'
-        run: echo 'Issue created'
-
-name: 'PR merged'
-
-on:
   pull_request:
     types: [closed]
-
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
-    steps:
-      - name: 'PR merged'
-        run: echo 'PR merged'
-        
-name: 'Next one'
-
-on:
   workflow_run:
     workflows: ['PR merged']
     types: [completed]
-
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Next one'
-        run: echo 'Next one'
-        
-name: 'Workflow depends'
-
-on: 
   workflow_dispatch:
 
 jobs:
-  job1:
+  issue_created:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Issue created'
+        if: github.event_name == 'issues'
+        run: echo 'Issue created'
+
+  pr_merged:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'PR merged'
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        run: echo 'PR merged'
+
+  next_one:
+    runs-on: ubuntu-latest
+    needs: [pr_merged]
+    steps:
+      - name: 'Next one'
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.workflow == 'PR merged'
+        run: echo 'Next one'
+
+  workflow_depends:
     runs-on: ubuntu-latest
     steps:
       - name: 'Job 1'
+        if: github.event_name == 'workflow_dispatch'
         run: echo 'Job 1'
 
-  job2:
-    needs: [job1]
-    runs-on: ubuntu-latest
-    steps:
       - name: 'Job 2'
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.workflow == 'Exercices' && needs.job1.result == 'success'
         run: echo 'Job 2'
-
