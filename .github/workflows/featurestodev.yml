@@ -22,3 +22,11 @@ jobs:
         run: npm ci
       - name: Run Tests
         run: npm run test
+      - name: coverage report
+        run: npx nyc --reporter=text-summary --reporter=lcov npm run test:coverage
+        
+      - name: sauvegarde en artefact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage.txt
