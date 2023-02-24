@@ -16,3 +16,5 @@ jobs:
           git fetch --prune
           git branch -D feature/${{ github.event.pull_request.head.ref }}
           git push origin :feature/${{ github.event.pull_request.head.ref }}
+
+#justforcommit conventionnal
