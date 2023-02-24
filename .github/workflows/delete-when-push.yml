@@ -1,0 +1,18 @@
+name: Supprimer branche feature/
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  delete-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Delete Branch
+        run: |
+          git fetch --prune
+          git branch -D feature/${{ github.event.pull_request.head.ref }}
+          git push origin :feature/${{ github.event.pull_request.head.ref }}
